@@ -1,0 +1,54 @@
+{
+  "name": "unreal-vscode-helper",
+  "displayName": "Unreal VSCode Helper",
+  "description": "Validates .vscode/tasks.json and c_cpp_properties.json for Unreal Engine projects and can fix them.",
+  "version": "0.2.0",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./index.js",
+  "contributes": {
+    "commands": [
+      {
+  "command": "unrealVscodeHelper.validate",
+  "title": "Unreal VSCode Helper: Validate VSCode Config"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+  "title": "Unreal VSCode Helper",
+      "properties": {
+        "unrealVscodeHelper.enginePath": {
+          "type": "string",
+          "default": "",
+          "description": "Optional path to Unreal Engine install (used to build a default Build.bat path)."
+        }
+      }
+    }
+  },
+  "publisher": "local",
+  "repository": {
+    "type": "git",
+  "url": "https://github.com/tyen901/unreal-vscode-helper.git"
+  },
+  "categories": [
+    "Other"
+  ],
+  "scripts": {
+    "test": "mocha",
+    "package": "npx @vscode/vsce package --no-dependencies",
+    "semantic-release": "npx semantic-release"
+  },
+  "devDependencies": {
+    "mocha": "11.7.2",
+    "semantic-release": "24.2.8",
+    "@semantic-release/commit-analyzer": "13.0.1",
+    "@semantic-release/release-notes-generator": "14.1.0",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/github": "11.0.6"
+  }
+}
