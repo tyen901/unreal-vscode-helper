@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [ main, master ]
+    tags: ['v*', 'V*', '*.*.*']
   pull_request:
     branches: [ main, master ]
 
@@ -23,6 +24,23 @@ jobs:
 
       - name: Run tests
         run: npm test
+      # Packaging and release are handled in the `package` job which runs only on tags
+
+  package:
+    # run only for tag pushes
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: windows-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install
+        run: npm ci
 
       - name: Package VSIX
         run: npm run package
@@ -41,9 +59,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    needs: build
+    # Keep semantic-release but run it only when a tag is pushed to main/master
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: package
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     permissions:
       contents: write
       packages: write

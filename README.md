@@ -34,3 +34,14 @@ Packaging
 npx vsce package
 ```
 
+CI
+- The repository uses GitHub Actions to run tests on push and pull requests to `main`/`master`.
+- Packaging and publishing of the `.vsix` (and running semantic-release) only occurs when a tag is pushed (for example `v1.2.3`).
+
+To create a release/build, tag a commit and push the tag:
+
+```powershell
+git tag v1.2.3
+git push --tags
+```
+
