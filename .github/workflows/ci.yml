@@ -98,9 +98,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   release:
-    # Keep semantic-release but run it only when a tag is pushed to main/master
-    if: startsWith(github.ref, 'refs/tags/')
-    needs: package
+    # Run semantic-release on branch pushes so it can create tags/releases itself
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
