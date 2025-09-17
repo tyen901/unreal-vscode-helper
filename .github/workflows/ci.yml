@@ -51,6 +51,10 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     needs: test
+    # Give the job explicit permissions required to create releases & upload packages
+    permissions:
+      contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
@@ -66,6 +70,19 @@ jobs:
 
       - name: Package VSIX
         run: npm run package
+
+      - name: Verify VSIX exists
+        run: |
+          echo "Listing workspace files"
+          ls -la
+          echo "Checking for .vsix files"
+          shopt -s nullglob || true
+          VSIX_FILES=( *.vsix )
+          if [ ${#VSIX_FILES[@]} -eq 0 ]; then
+            echo "ERROR: No .vsix files found after packaging. Make sure 'npm run package' writes a .vsix into the workspace root or update the workflow path." 
+            exit 1
+          fi
+          echo "Found VSIX: ${VSIX_FILES[0]}"
 
       - name: Upload VSIX
         uses: actions/upload-artifact@v4
