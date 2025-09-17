@@ -21,6 +21,22 @@ jobs:
 
       - name: Install
         run: npm ci
+      # build job installs dependencies and can run build tasks if needed
+      # (no build script is defined in package.json currently)
+
+  test:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install
+        run: npm ci
 
       - name: Run tests
         run: npm test
@@ -30,7 +46,7 @@ jobs:
     # run only for tag pushes
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: windows-latest
-    needs: build
+    needs: test
     steps:
       - uses: actions/checkout@v4
 
